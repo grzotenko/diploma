@@ -55,4 +55,5 @@ class News(models.Model):
         indexes = (
             models.Index(fields=['preview']),
             models.Index(fields=['title']),
+            models.Index(fields=['text']),
         )

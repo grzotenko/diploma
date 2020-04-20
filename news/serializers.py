@@ -27,4 +27,4 @@ class NewsSerializer(serializers.ModelSerializer):
     directions = DirectionSerializer(many=True)
     class Meta:
         model = News
-        fields = ['id', 'title', 'date', 'directions', ]
+        fields = ['id', 'title', 'date', 'directions', 'text']

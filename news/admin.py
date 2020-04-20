@@ -11,6 +11,7 @@ class NewsAdmin(ImageCroppingMixin,admin.ModelAdmin):
     model = News
     list_display = ['title', 'date', 'main', 'important']
     readonly_fields = ()
+    filter_horizontal = ('directions',)
     fieldsets = (
         ("Основная информация", {
             'fields': ('title', 'preview', 'date',),
