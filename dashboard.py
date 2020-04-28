@@ -71,6 +71,10 @@ class CustomIndexDashboard(Dashboard):
             title=('Игроки и команды'),
             models=['information.models.*', ],
         ))
+        self.children.append(modules.ModelList(
+            title=('Соревнования'),
+            models=['tournaments.models.*', ],
+        ))
 
 
 

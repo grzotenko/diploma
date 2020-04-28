@@ -14,6 +14,14 @@ objectMain = namedtuple('common', ('main', 'menu', 'social', 'partners', 'contac
 objectNews = namedtuple('main_news', ('main', 'important'))
 objectMedia = namedtuple('media', ('photos', 'videos', 'urlphotos', 'urlvideos'))
 
+from tournaments.models import *
+
+@api_view(['GET'])
+def time_test(request, format=None):
+    a = Game.objects.get(id=5555)
+    return Response({
+        'Main Page': str(a.id)
+    })
 @api_view(['GET'])
 def api_root(request, format=None):
 
@@ -54,5 +62,8 @@ def api_root(request, format=None):
         },
         'Federation': {
             'Detail': reverse('federation-detail', request=request, args=[FederationElement.objects.first().id]),
+        },
+        'Testing': {
+            'Game': reverse('time-test', request=request),
         },
     })

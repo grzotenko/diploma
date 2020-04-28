@@ -3,6 +3,7 @@ from django.utils import timezone
 from .validators import *
 from image_cropping import ImageRatioField
 from django.core.validators import MinValueValidator
+import architect
 
 from information.models import Team, Player
 # Create your models here.
@@ -18,7 +19,8 @@ class Rules(models.Model):
 
 
 
-
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='1000', column='id')
 class Tournament(models.Model):
     def user_directory_path(instance, filename):
         return '{0}/{1}/{2}'.format(instance._meta.model_name,instance.id, filename)
@@ -31,8 +33,8 @@ class Tournament(models.Model):
     end = models.DateField(default=timezone.now, blank=True, null=True, verbose_name="Окончание турнира")
     address = models.CharField(default='', verbose_name="Место проведения", blank=True, max_length=300)
     map = models.CharField(blank=True, default="", max_length=1501, verbose_name="Ссылка на яндекс-карту")
-    champion = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name="Чемпион")
-    rules = models.ForeignKey(Rules, on_delete=models.CASCADE, verbose_name="Правила")
+    champion = models.ForeignKey(Team, on_delete=models.CASCADE, verbose_name="Чемпион", null=True, blank=True)
+    rules = models.ForeignKey(Rules, on_delete=models.CASCADE, verbose_name="Правила", null=True, blank=True)
     def __str__(self):
         return self.title
 
@@ -131,13 +133,15 @@ class Stage(models.Model):
     type = models.CharField(max_length=25, verbose_name="Тип стадии", blank=False, choices=TypeStage,default="Чемпионат")
 
     def __str__(self):
-        return str(self.customOrder)+")"+str(self.id_fk.__str__())
+        return str(self.id_fk.__str__()) +"(" +str(self.customOrder)+" стадия)"
 
     class Meta(object):
         verbose_name = "Стадия"
         verbose_name_plural = "Стадии"
         ordering = ['customOrder']
 
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Competitor(models.Model):
     id_fk = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='competitors')
     points = models.PositiveIntegerField(validators=[MinValueValidator(0),],default=0, blank=False, null=False, verbose_name="Количество очков")
@@ -151,6 +155,8 @@ class Competitor(models.Model):
         verbose_name = "Участник соревнований"
         verbose_name_plural = "Участники соревнований"
 
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class StatsPlayer(models.Model):
     id_fk = models.ForeignKey(Competitor, on_delete=models.CASCADE, related_name='statsplayers')
     matches = models.PositiveIntegerField(validators=[MinValueValidator(0),],default=0, blank=False, null=False, verbose_name="Игры")
@@ -169,6 +175,8 @@ class StatsPlayer(models.Model):
         verbose_name = "Статистика Игрока"
         verbose_name_plural = "Статистики игроков"
 
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Award(models.Model):
     id_fk = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name='awards')
     type = models.ForeignKey(AwardsType, on_delete=models.CASCADE, verbose_name='Тип награды')
@@ -182,6 +190,8 @@ class Award(models.Model):
         verbose_name = "Индивидуальная награда"
         verbose_name_plural = "Индивидуальные награды"
 
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Round(models.Model):
     tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, verbose_name='Турнир')
     stage = models.ForeignKey(Stage, on_delete=models.CASCADE, verbose_name='Стадия')
@@ -194,6 +204,8 @@ class Round(models.Model):
         verbose_name = "Тур"
         verbose_name_plural = "Туры"
 
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Game(models.Model):
     resultHome = "1"
     resultDraw = "="
@@ -207,9 +219,9 @@ class Game(models.Model):
         (resultPenaltyHome, "Победа хозяев(пен)"),
         (resultPenaltyAway, "Победа гостей(пен)")
     )
-    round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name='Тур')
-    home = models.ForeignKey(Competitor, on_delete=models.CASCADE, verbose_name='Домашняя команда', related_name='homegames')
-    away = models.ForeignKey(Competitor, on_delete=models.CASCADE, verbose_name='Гостевая команда', related_name='awaygames')
+    round = models.ForeignKey(Round, on_delete=models.CASCADE, verbose_name='Тур', null=True, blank=True)
+    home = models.ForeignKey(Competitor, on_delete=models.CASCADE, verbose_name='Домашняя команда', related_name='homegames', null=True, blank=True)
+    away = models.ForeignKey(Competitor, on_delete=models.CASCADE, verbose_name='Гостевая команда', related_name='awaygames', null=True, blank=True)
     homeGoals = models.PositiveIntegerField(validators=[MinValueValidator(0),],default=0, blank=False, null=False, verbose_name="Забито домашней командой")
     awayGoals = models.PositiveIntegerField(validators=[MinValueValidator(0),], default=0, blank=False, null=False,
                                          verbose_name="Забито гостевой командой")
@@ -218,15 +230,19 @@ class Game(models.Model):
     awayPenalty = models.PositiveIntegerField(validators=[MinValueValidator(0),], default=0, blank=False, null=False,
                                             verbose_name="Забито гостевой командой(пен)")
     result = models.CharField(max_length=25, verbose_name="Результат", blank=False, choices=TypeResult)
-
+    date = models.DateField(default=timezone.now, blank=False, verbose_name="Дата матча")
 
     def __str__(self):
-        return str(self.round.__str__())+" - "+str(self.home.team.title)+" : "+str(self.away.team.title)
-
+        try:
+            return str(self.round.__str__())+" - "+str(self.home.team.title)+" : "+str(self.away.team.title)
+        except:
+            return str(self.date)
     class Meta(object):
         verbose_name = "Игра"
         verbose_name_plural = "Игры"
 
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Protocol(models.Model):
     id_fk = models.ForeignKey(Game, on_delete=models.CASCADE, related_name='protocols')
     player = models.ForeignKey(StatsPlayer, on_delete=models.CASCADE, verbose_name='Игрок')
@@ -238,7 +254,8 @@ class Protocol(models.Model):
         verbose_name = "Протокол"
         verbose_name_plural = "Протоколы"
 
-
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Card(models.Model):
     yellowCard = "Y"
     redCard = "R"
@@ -255,7 +272,8 @@ class Card(models.Model):
         verbose_name = "Действие"
         verbose_name_plural = "Действия"
 
-
+@architect.install('partition', type='range', subtype='integer',
+                   constraint='5000', column='id')
 class Goal(models.Model):
     id_fk = models.ForeignKey(Protocol, on_delete=models.CASCADE, related_name='goals')
     minute = models.PositiveIntegerField(validators=[MinValueValidator(1),], default=1, blank=False, null=False,

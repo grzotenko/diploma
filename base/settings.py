@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.postgres',
     'adminsortable2',####pip install django-admin-sortable2####
     'import_export', ####pip install django-import-export####
+    'debug_toolbar',
     'tabbed_admin',
     'rest_framework',
     'corsheaders',
@@ -74,7 +75,14 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
+INTERNAL_IPS = [
+    # ...
+    '127.0.0.1',
+    # ...
+]
+
 CORS_ORIGIN_WHITELIST  =  [
     "http://localhost:3000",
 ]
@@ -131,8 +139,8 @@ elif LOCALDB == True:
             'default': {
                 'ENGINE': 'django.db.backends.postgresql_psycopg2',
                 'NAME': 'diploma_db',
-                'USER': 'user_name',
-                'PASSWORD': 'password',
+                'USER': 'gr',
+                'PASSWORD': 'grizot2301',
                 'HOST': '127.0.0.1',
                 'PORT': '5432',
             }
@@ -211,3 +219,4 @@ ADMIN_TOOLS_MENU = 'menu.CustomMenu'
 ADMIN_TOOLS_INDEX_DASHBOARD = 'dashboard.CustomIndexDashboard'
 ADMIN_TOOLS_APP_INDEX_DASHBOARD = 'dashboard.CustomAppIndexDashboard'
 ADMIN_TOOLS_THEMING_CSS = 'css/custom.css' # путь относительно MEDIA_ROOT
+
