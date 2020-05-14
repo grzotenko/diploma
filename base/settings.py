@@ -24,6 +24,7 @@ SECRET_KEY = 'm3%i)edpr3a-zpnv3sx+80h*)%@lu-$u-doa9pix7f(aq9(jnh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+REACT_USE = False
 
 ALLOWED_HOSTS = ['*',]
 
@@ -31,6 +32,7 @@ ALLOWED_HOSTS = ['*',]
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'admin_tools',
     'admin_tools.theming',
     'admin_tools.menu',
@@ -47,7 +49,6 @@ INSTALLED_APPS = [
     'debug_toolbar',
     'tabbed_admin',
     'rest_framework',
-    'corsheaders',
     'django_seed',
     'easy_thumbnails',
     'image_cropping',
@@ -64,6 +65,32 @@ INSTALLED_APPS = [
     'tournaments',
     'django_cleanup', # should go after your apps
 ]
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ORIGIN_WHITELIST = (
+    'http://localhost:3000',
+)
+CORS_ALLOW_HEADERS = (
+    'access-control-allow-credentials',
+    'access-control-allow-origin',
+    'access-control-request-method',
+    'access-control-request-headers',
+    'accept',
+    'accept-encoding',
+    'accept-language',
+    'authorization',
+    'connection',
+    'content-type',
+    'dnt',
+    'credentials',
+    'host',
+    'origin',
+    'user-agent',
+    'X-CSRF-TOKEN',
+    'X-CSRFToken',
+    'x-requested-with',
+)
+
 TABBED_ADMIN_USE_JQUERY_UI = True
 
 MIDDLEWARE = [
@@ -83,9 +110,7 @@ INTERNAL_IPS = [
     # ...
 ]
 
-CORS_ORIGIN_WHITELIST  =  [
-    "http://localhost:3000",
-]
+
 from easy_thumbnails.conf import Settings as thumbnail_settings
 THUMBNAIL_PROCESSORS = (
     'image_cropping.thumbnail_processors.crop_corners',
@@ -149,10 +174,10 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'diploma_db',
-            'USER': 'diploma_user',
-            'PASSWORD': 'diploma$*TAG',
-            'HOST': 'cloudsockets.net',
+            'NAME': 'test_diploma',
+            'USER': 'gr',
+            'PASSWORD': 'grizot2301',
+            'HOST': '127.0.0.1',
             'PORT': '5432',
         }
     }

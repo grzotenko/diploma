@@ -1,0 +1,36 @@
+{
+  "files": {
+    "main.css": "/static/css/main.899d15d4.chunk.css",
+    "main.js": "/static/js/main.3841dbac.chunk.js",
+    "main.js.map": "/static/js/main.3841dbac.chunk.js.map",
+    "runtime-main.js": "/static/js/runtime-main.584e3335.js",
+    "runtime-main.js.map": "/static/js/runtime-main.584e3335.js.map",
+    "static/css/2.bfad40d9.chunk.css": "/static/css/2.bfad40d9.chunk.css",
+    "static/js/2.caf9e822.chunk.js": "/static/js/2.caf9e822.chunk.js",
+    "static/js/2.caf9e822.chunk.js.map": "/static/js/2.caf9e822.chunk.js.map",
+    "index.html": "/templates/index.html",
+    "precache-manifest.0fbc89d277ef25120442ea35093edcbc.js": "/precache-manifest.0fbc89d277ef25120442ea35093edcbc.js",
+    "service-worker.js": "/service-worker.js",
+    "static/css/2.bfad40d9.chunk.css.map": "/static/css/2.bfad40d9.chunk.css.map",
+    "static/css/main.899d15d4.chunk.css.map": "/static/css/main.899d15d4.chunk.css.map",
+    "static/js/2.caf9e822.chunk.js.LICENSE.txt": "/static/js/2.caf9e822.chunk.js.LICENSE.txt",
+    "static/media/main.css": "/static/media/Xayax-Regular.808df52d.ttf",
+    "static/media/facebook.svg": "/static/media/facebook.d99368ca.svg",
+    "static/media/filters-icon.3cfc9484.svg": "/static/media/filters-icon.3cfc9484.svg",
+    "static/media/instagram.svg": "/static/media/instagram.e8a9d909.svg",
+    "static/media/location.svg": "/static/media/location.667d7551.svg",
+    "static/media/mail.svg": "/static/media/mail.20d69141.svg",
+    "static/media/news-more.svg": "/static/media/news-more.505c5357.svg",
+    "static/media/phone.svg": "/static/media/phone.3e3891c4.svg",
+    "static/media/search.svg": "/static/media/search.ecef733a.svg",
+    "static/media/vk.svg": "/static/media/vk.e1fdc583.svg",
+    "static/media/youtube.svg": "/static/media/youtube.9cb24783.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.584e3335.js",
+    "static/css/2.bfad40d9.chunk.css",
+    "static/js/2.caf9e822.chunk.js",
+    "static/css/main.899d15d4.chunk.css",
+    "static/js/main.3841dbac.chunk.js"
+  ]
+}

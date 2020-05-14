@@ -22,11 +22,11 @@ def submit_row(context):
     })
     return ctx
 
-class MenuInline(admin.StackedInline):
+class MenuInline(SortableInlineAdminMixin, admin.StackedInline):
     model = Menu
     # readonly_fields = ["path"]
     extra = 0
-    fields = ['title', 'path']
+    fields = ['title', 'path', 'customOrder']
 
     def has_add_permission(self, request):
         return False if self.model.objects.count() > 7 else super().has_add_permission(request)

@@ -7,9 +7,10 @@ from datetime import date, timedelta
 from api.views import objectMain
 from .serializers import *
 
+# from base.settings import REACT_USE
 # Create your views here.
 class MainCommonViewSet(views.APIView):
-    def get(self, request):
+    def get(self, request, REACT_USE=True):
         ObjectMain = objectMain(
             main=Main.objects.first(),
             menu=Menu.objects.all(),
@@ -35,5 +36,7 @@ class MainCommonViewSet(views.APIView):
                 }
             )
             partner['image'] = image
-
+        if not REACT_USE:
+            return serializerCommon.data
         return Response(serializerCommon.data)
+

@@ -18,7 +18,7 @@ from tournaments.models import *
 
 @api_view(['GET'])
 def time_test(request, format=None):
-    a = Game.objects.get(id=5555)
+    a = Game.objects.get(id=490000)
     return Response({
         'Main Page': str(a.id)
     })

@@ -1,0 +1,31 @@
+{% load staticfiles %}
+<div class="header pos-fixed w-full" id="anchorTop">
+    <div class="social-block dis-flex">
+        <button class="social-block__search">
+            <img class="social-block__search-img" width="18" height="18" src="{% static 'img/tools-and-utensils.svg' %}">
+        </button>
+        <div class="social-block__elems dis-flex m-l-5">
+            <a href="#" class="social-block__elem">
+                <img class="social-block__elem-img" width="20" height="20" src="{% static 'img/vk.svg' %}">
+            </a>
+            <a href="#" class="social-block__elem m-l-5">
+                <img class="social-block__elem-img" width="20" height="20" src="{% static 'img/facebook.svg' %}">
+            </a>
+            <a href="#" class="social-block__elem m-l-5">
+                <img class="social-block__elem-img" width="20" height="20" src="{% static 'img/instagram.svg' %}">
+            </a>
+            <a href="#" class="social-block__elem m-l-5">
+                <img class="social-block__elem-img" width="20" height="20" src="{% static 'img/youtube.svg' %}">
+            </a>
+        </div>
+    </div>
+    <div class="m-t-5 header-menu">
+        <nav class="menu">
+            <ul class="menu__list">
+                {%for elem in menu%}
+                <li class="menu__group"><a href="{{elem.path}}" class="menu__link">{{elem.title}}</a></li>
+                {%endfor%}
+            </ul>
+        </nav>
+    </div>
+</div>

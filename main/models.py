@@ -21,14 +21,15 @@ class Menu(models.Model):
     id_fk = models.ForeignKey(Main, on_delete=models.CASCADE, related_name='menu')
     title = models.CharField(blank=False,  default="", max_length=30, verbose_name="Название элемента меню")
     path = models.CharField(blank=False,  default="", max_length=101, verbose_name="Путь")
-
+    customOrder = models.PositiveIntegerField(default=0, blank=False, null=False,
+                                              verbose_name="Перетащите на нужное место")
     def __str__(self):
         return self.title
 
     class Meta(object):
         verbose_name = "Меню"
         verbose_name_plural = "Меню"
-
+        ordering = ['customOrder']
 class Partner(models.Model):
     def user_directory_path(instance, filename):
         return '{0}/{1}/{2}/{3}'.format(instance._meta.app_label,instance._meta.model_name,instance.id, filename)

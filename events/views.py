@@ -10,7 +10,7 @@ from .serializers import *
 
 class BlockEventsViewSetAPI(views.APIView):
     def get(self, request):
-        serializerEvents = EventBlockSerializer(Event.objects.filter(main = True), many=True)
+        serializerEvents = EventBlockSerializer(Event.objects.filter(main = True)[:9], many=True)
         dataEvents = serializerEvents.data
         from image_cropping.utils import get_backend
         for event in dataEvents:
