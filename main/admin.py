@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .models import Main, Menu, Partner, SocialNet, Contact
-
+from searchgr.models import SettingsSearch
 from adminsortable2.admin import SortableInlineAdminMixin, SortableAdminMixin
 from tabbed_admin import TabbedModelAdmin
 from django.urls import reverse
@@ -94,6 +94,15 @@ class PartnerInline(SortableInlineAdminMixin,admin.StackedInline):
     get_edit_link.short_description = "Редактировать картинку"
     def has_add_permission(self, request):
         return False if self.model.objects.count() > 5 else super().has_add_permission(request)
+class SettingsSearchInline(admin.StackedInline):
+    model = SettingsSearch
+    fields = ["factorTitle","factorPreview","factorText", "factorPage","filterGTE", "rank_similarity"]
+    radio_fields = {"rank_similarity": admin.HORIZONTAL}
+    extra = 0
+    def has_add_permission(self, request):
+        return False if self.model.objects.count() > 0 else super().has_add_permission(request)
+    def has_delete_permission(self, request, obj=None):
+        return False
 
 class MainAdmin(TabbedModelAdmin):
     model = Main
@@ -114,12 +123,16 @@ class MainAdmin(TabbedModelAdmin):
     tab_partners = (
         PartnerInline,
     )
+    tab_search = (
+        SettingsSearchInline,
+    )
     tabs = [
         ('Общая информация', tab_overview),
         ('Меню', tab_menu),
         ('Социальные сети', tab_socialnet),
         ('Контакты', tab_contacts),
         ('Партнеры', tab_partners),
+        ('Настройки поиска', tab_search),
     ]
 
     def has_add_permission(self, request):

@@ -25,6 +25,27 @@ class BlockFederationViewSetAPI(views.APIView):
             elem['image'] = image
         return Response(dataFederationElements)
 
+class FederationPage(views.APIView):
+    def get(self, request):
+        serializerFederation = FederationSerializer(Federation.objects.first())
+        dataFederation = serializerFederation.data
+        # from image_cropping.utils import get_backend
+        # for elem in dataFederation["federationelement_set"]:
+        #     for staff in elem["federationstaff_set"]:
+        #         ID = staff.get("id")
+        #         obj = FederationStaff.objects.get(id=ID)
+        #         image = get_backend().get_thumbnail_url(
+        #             obj.imageOld,
+        #             {
+        #                 'size': (320, 300),
+        #                 'box': obj.image,
+        #                 'crop': True,
+        #                 'detail': True,
+        #             }
+        #         )
+        #         staff['image'] = image
+        return Response(dataFederation)
+
 class FederationElemDetail(views.APIView):
     def get(self, request, pk):
         id = int(pk)

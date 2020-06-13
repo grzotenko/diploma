@@ -17,16 +17,9 @@ class FederationStaffInline(SortableInlineAdminMixin,admin.StackedInline):
         }),
         ('Редактирование', {
             'classes': ('collapse',),
-            'fields': ("name","position","imageOld","image","text","customOrder")
+            'fields': ("name","position","image","text","customOrder")
         }),
     )
-
-    def formfield_for_dbfield(self, db_field, **kwargs):
-        crop_fields = getattr(self.model, 'crop_fields', {})
-        if db_field.name in crop_fields:
-            kwargs['widget'] = ImageCropWidget
-
-        return super(FederationStaffInline, self).formfield_for_dbfield(db_field, **kwargs)
 
     def get_model_perms(self, request):
         return {}
@@ -41,7 +34,7 @@ class FederationStaffInline(SortableInlineAdminMixin,admin.StackedInline):
 @admin.register(FederationElement)
 class FederationElementAdmin(ImageCroppingMixin, admin.ModelAdmin):
     readonly_fields = ["return_back",]
-    fields = ["imageOld", "image", "return_back"]
+    fields = ["return_back"]
     inlines = [FederationStaffInline]
 
     def return_back(self, obj):
@@ -56,13 +49,6 @@ class FederationElementAdmin(ImageCroppingMixin, admin.ModelAdmin):
     def get_model_perms(self, request):
         return {}
 
-    def delete_queryset(self, request, queryset):
-        import shutil, os
-        for obj in queryset:
-            path = './media/{0}/{1}/{2}'.format(obj._meta.app_label, obj._meta.model_name, obj.id)
-            if os.path.exists(path):
-                shutil.rmtree(path)
-            obj.delete()
 
 class FederationElementInline(SortableInlineAdminMixin,admin.StackedInline):
     model = FederationElement
@@ -97,7 +83,7 @@ class FederationAdmin(TabbedModelAdmin):
     list_display = ['title',]
     tab_overview = (
         (None, {
-            'fields': ('title',),
+            'fields': ('title','text', 'email', 'phone', 'map', 'address', 'work_time'),
         }),
     )
     tab_documents = (

@@ -30,11 +30,11 @@ class BlockEventsViewSetAPI(views.APIView):
 
 class EventsAllViewSet(views.APIView):
     def get(self, request, page):
-        direction = int(request.GET.get("direction","-1"))
+        trend = int(request.GET.get("direction","-1"))
         dateStartStr = request.GET.get("from","-")
         dateEndStr = request.GET.get("to", "-")
         offset = int(page)
-        if direction == -1:
+        if trend == -1:
             if dateEndStr == "-" and dateStartStr == "-":
                 serializerEvents = EventBlockSerializer(Event.objects.all().reverse()[offset:offset+12], many=True)
             else:
@@ -43,21 +43,21 @@ class EventsAllViewSet(views.APIView):
                 setEvents = Event.objects.filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).reverse()
                 serializerEvents = EventBlockSerializer(setEvents[offset:offset+12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id=direction)[offset:offset + 12], many=True)
+            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend)[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setEvents = Event.objects.filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id=direction)
+            setEvents = Event.objects.filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend)
             serializerEvents = EventBlockSerializer(setEvents[offset:offset + 12], many=True)
         return Response(getDataEvents(serializerEvents))
 
 class EventsActiveViewSet(views.APIView):
     def get(self, request, page):
-        direction = int(request.GET.get("direction","-1"))
+        trend = int(request.GET.get("direction","-1"))
         dateStartStr = request.GET.get("from","-")
         dateEndStr = request.GET.get("to", "-")
         offset = int(page)
-        if direction == -1:
+        if trend == -1:
             if dateEndStr == "-" and dateStartStr == "-":
                 serializerEvents = EventBlockSerializer(Event.objects.filter(dateEnd__gte = date.today())[offset:offset+12], many=True)
             else:
@@ -66,21 +66,21 @@ class EventsActiveViewSet(views.APIView):
                 setEvents = Event.objects.filter(dateEnd__gte = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).reverse()
                 serializerEvents = EventBlockSerializer(setEvents[offset:offset+12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id=direction, dateEnd__gte = date.today())[offset:offset + 12], many=True)
+            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend, dateEnd__gte = date.today())[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setEvents = Event.objects.filter(dateEnd__gte = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id=direction)
+            setEvents = Event.objects.filter(dateEnd__gte = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend)
             serializerEvents = EventBlockSerializer(setEvents[offset:offset + 12], many=True)
         return Response(getDataEvents(serializerEvents))
 
 class EventsCompletedViewSet(views.APIView):
     def get(self, request, page):
-        direction = int(request.GET.get("direction","-1"))
+        trend = int(request.GET.get("direction","-1"))
         dateStartStr = request.GET.get("from","-")
         dateEndStr = request.GET.get("to", "-")
         offset = int(page)
-        if direction == -1:
+        if trend == -1:
             if dateEndStr == "-" and dateStartStr == "-":
                 serializerEvents = EventBlockSerializer(Event.objects.filter(dateEnd__lt = date.today())[offset:offset+12], many=True)
             else:
@@ -89,11 +89,11 @@ class EventsCompletedViewSet(views.APIView):
                 setEvents = Event.objects.filter(dateEnd__lt = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).reverse()
                 serializerEvents = EventBlockSerializer(setEvents[offset:offset+12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id=direction, dateEnd__lt = date.today())[offset:offset + 12], many=True)
+            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend, dateEnd__lt = date.today())[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setEvents = Event.objects.filter(dateEnd__lt = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id=direction)
+            setEvents = Event.objects.filter(dateEnd__lt = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend)
             serializerEvents = EventBlockSerializer(setEvents[offset:offset + 12], many=True)
         return Response(getDataEvents(serializerEvents))
 
@@ -119,25 +119,28 @@ class EventDetail(views.APIView):
     def get(self, request, pk):
         id = int(pk)
         event = get_object_or_404(Event, id=id)
-        try:
-            next_event = event.get_next_by_dateEnd()
-        except:
-            next_event = id+1
-        try:
-            previous_event = event.get_previous_by_dateEnd()
-        except:
-            previous_event = id-1
+
         similar_event = list()
         counterSimilarEvent = 0
+        listUniqueTrends = list()
+
         for direction in event.directions.all():
-            for obj in direction.event_set.all():
-                if obj.id != event.id:
-                    similar_event.append(obj)
-                    counterSimilarEvent += 1
+            listUniqueTrends.append(direction.id_fk)
+        listUniqueTrends = list(set(listUniqueTrends))
+        for trend in listUniqueTrends:
+            for direction in Direction.objects.filter(id_fk = trend):
+                for obj in direction.event_set.all():
+                    if obj.id is not event.id:
+                        similar_event.append(obj)
+                        counterSimilarEvent += 1
+                    if counterSimilarEvent == 3:
+                        break
                 if counterSimilarEvent == 3:
                     break
             if counterSimilarEvent == 3:
                 break
+        similar_event = list(set(similar_event))
+
 
         from image_cropping.utils import get_backend
         image = get_backend().get_thumbnail_url(
@@ -153,16 +156,10 @@ class EventDetail(views.APIView):
         eventData = serializerEvent.data
         eventData['image'] = image
 
-        serializerNextEvent = EventNextPrevSimilarSerializer(next_event)
-        serializerPreviousEvent = EventNextPrevSimilarSerializer(previous_event)
         serializerSimilarEvent = EventNextPrevSimilarSerializer(similar_event, many=True)
 
-        previousData = None if len(serializerPreviousEvent.data) == 0 else serializerPreviousEvent.data
-        nextData = None if len(serializerNextEvent.data) == 0 else serializerNextEvent.data
 
         return Response({
-            "opportunity": eventData,
-            "nextOpportunity": nextData,
-            "previousOpportunity": previousData,
-            "similarOpportunity": serializerSimilarEvent.data,
+            "event": eventData,
+            "similarEvents": serializerSimilarEvent.data,
        })

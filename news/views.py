@@ -61,11 +61,11 @@ class BlockNewsViewSetAPI(views.APIView):
 
 class AllNewsViewSet(views.APIView):
     def get(self, request, page):
-        direction = int(request.GET.get("direction","-1"))
+        trend = int(request.GET.get("direction","-1"))
         dateStartStr = request.GET.get("from", "-")
         dateEndStr = request.GET.get("to", "-")
         offset = int(page)
-        if direction == -1:
+        if trend == -1:
             if dateEndStr == "-" and dateStartStr == "-":
                 serializerAllNews = AllNewsSerializer(News.objects.all()[offset:offset + 12],many=True)
             else:
@@ -74,11 +74,11 @@ class AllNewsViewSet(views.APIView):
                 setNews = News.objects.filter(date__date__range=(dateStart,dateEnd))
                 serializerAllNews = AllNewsSerializer(setNews[offset:offset + 12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerAllNews = AllNewsSerializer(News.objects.filter(directions__id=direction)[offset:offset + 12], many=True)
+            serializerAllNews = AllNewsSerializer(News.objects.filter(directions__id_fk__id=trend)[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setNews = News.objects.filter(date__date__range=(dateStart, dateEnd), directions__id=direction)
+            setNews = News.objects.filter(date__date__range=(dateStart, dateEnd), directions__id_fk__id=trend)
             serializerAllNews = AllNewsSerializer(setNews[offset:offset + 12], many=True)
         newsData = serializerAllNews.data
         from image_cropping.utils import get_backend
@@ -109,17 +109,27 @@ class NewsDetail(views.APIView):
             previous_news = news.get_previous_by_date()
         except:
             previous_news = id-1
+
         similar_news = list()
         counterSimilarNews = 0
+        listUniqueTrends = list()
         for direction in news.directions.all():
-            for obj in direction.news_set.all():
-                if obj.id is not news.id:
-                    similar_news.append(obj)
-                    counterSimilarNews += 1
+            listUniqueTrends.append(direction.id_fk)
+        listUniqueTrends = list(set(listUniqueTrends))
+        for trend in listUniqueTrends:
+            for direction in Direction.objects.filter(id_fk = trend):
+                for obj in direction.news_set.all():
+                    if obj.id is not news.id:
+                        similar_news.append(obj)
+                        counterSimilarNews += 1
+                    if counterSimilarNews == 3:
+                        break
                 if counterSimilarNews == 3:
                     break
             if counterSimilarNews == 3:
                 break
+        similar_news = list(set(similar_news))
+
         from image_cropping.utils import get_backend
         image = get_backend().get_thumbnail_url(
             news.imageOld,

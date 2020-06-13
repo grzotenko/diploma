@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'admin_tools.theming',
     'admin_tools.menu',
     'admin_tools.dashboard',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     'events',
     'information',
     'tournaments',
+    'searchgr',
     'django_cleanup', # should go after your apps
 ]
 CORS_ORIGIN_ALLOW_ALL = True

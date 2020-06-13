@@ -3,7 +3,7 @@ from django.views import View
 from rest_framework import views
 from rest_framework.response import Response
 from datetime import date, timedelta
-
+from directions.models import Trend
 from api.views import objectMain
 from .serializers import *
 
@@ -20,7 +20,7 @@ class MainCommonViewSet(views.APIView):
             massMedia=Contact.objects.last(),
         )
         serializerCommon = CommonSerializer(ObjectMain)
-        # serializerCommon.data.get("menu")[4].update({"path": "/direction/" + str(Trends.objects.first().id) +"/about"})
+        serializerCommon.data.get("menu")[4].update({"path": "/direction/" + str(Trend.objects.first().id) +"/about"})
         commonData = serializerCommon.data
         from image_cropping.utils import get_backend
         for partner in commonData.get("partners"):

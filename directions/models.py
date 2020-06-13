@@ -40,3 +40,19 @@ class Direction(models.Model):
         verbose_name="Тэг"
         verbose_name_plural="Тэги"
         ordering = ['customOrder']
+
+
+class TrendsDocuments(models.Model):
+    id_fk = models.ForeignKey(Trend, on_delete=models.CASCADE)
+    title = models.CharField(blank=False, default="", max_length=300, verbose_name="Заголовок")
+    file = models.FileField(validators=[validate_documents], blank=True, default='', verbose_name="Файл",
+                              upload_to='trends/')
+    customOrder = models.PositiveIntegerField(default=0, blank=False, null=False, verbose_name="Перетащите на нужное место")
+
+    def __str__(self):
+        return str(self.id)
+
+    class Meta(object):
+        verbose_name = "Документ"
+        verbose_name_plural = "Документы"
+        ordering = ['customOrder']

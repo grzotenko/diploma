@@ -6,8 +6,8 @@ from datetime import date, timedelta
 from collections import namedtuple
 
 from federation.models import FederationElement
-from directions.models import Direction
 from events.models import Event
+from directions.models import Trend, Direction
 # Create your views here.
 
 objectMain = namedtuple('common', ('main', 'menu', 'social', 'partners', 'contacts', 'massMedia'))
@@ -32,6 +32,8 @@ def api_root(request, format=None):
             'Block Media': reverse('common-media-list', request=request),
             'Block Federation': reverse('common-federation-list', request=request),
             'Block Events': reverse('common-events-list', request=request),
+            'Block Trends': reverse('common-trends-list', request=request),
+
         },
         'Events': {
             'Active': {
@@ -62,8 +64,13 @@ def api_root(request, format=None):
         },
         'Federation': {
             'Detail': reverse('federation-detail', request=request, args=[FederationElement.objects.first().id]),
+            'Page': reverse('federation-page', request=request),
         },
-        'Testing': {
-            'Game': reverse('time-test', request=request),
+        'Search': reverse('search', request=request, args=[0]),
+        'Trends': {
+            'List': reverse('common-trends-list', request=request),
+            'Detail': reverse('trend-detail', request=request, args=[Trend.objects.first().id]),
+            'News': reverse('trend-detail-news', request=request, args=[Direction.objects.first().id, 0]),
+            'Opportunities': reverse('trend-detail-events', request=request, args=[Direction.objects.first().id, 0]),
         },
     })
