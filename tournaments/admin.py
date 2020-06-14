@@ -9,7 +9,7 @@ class StageInline(SortableInlineAdminMixin,admin.TabularInline):
     model = Stage
     extra = 0
     fields = [("groups", "next"), ("yellowcards", "matches"), "type",]
-    
+
 class RulesAdmin(admin.ModelAdmin):
     model = Rules
     fields = ["title",]
