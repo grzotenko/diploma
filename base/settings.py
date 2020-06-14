@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'tabbed_admin',
     'rest_framework',
     'django_seed',
+    'rest_framework_swagger',
     'easy_thumbnails',
     'image_cropping',
     'ckeditor',
@@ -111,7 +112,6 @@ INTERNAL_IPS = [
     '127.0.0.1',
     # ...
 ]
-
 
 from easy_thumbnails.conf import Settings as thumbnail_settings
 THUMBNAIL_PROCESSORS = (

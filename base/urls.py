@@ -2,7 +2,6 @@ from django.contrib import admin
 from django.urls import path
 from api.views import api_root
 from django.conf.urls import include, url, re_path
-
 from django.conf.urls.static import static  #media+static
 from django.conf import settings            #media+static
 from .views import *
