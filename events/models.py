@@ -8,8 +8,6 @@ from ckeditor_uploader.fields import RichTextUploadingField
 import architect
 from directions.models import Direction
 # Create your models here.
-@architect.install('partition', type='range', subtype='date',
-                   constraint='month', column='dateStart')
 class Event(models.Model):
     def user_directory_path(instance, filename):
         return '{0}/{1}/{2}'.format(instance._meta.model_name,instance.id, filename)

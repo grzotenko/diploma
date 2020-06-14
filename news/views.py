@@ -10,11 +10,6 @@ from api.views import objectNews
 
 class BlockNewsViewSetAPI(views.APIView):
     def get(self, request):
-        # ObjectNews = objectNews(
-        #     main=News.objects.filter(main=True)[:4],
-        #     important=News.objects.filter(important=True)[:4],
-        # )
-        # serializerNews = NewsBlocksSerializer(ObjectNews)
         serializerNews = NewsPartBlockSerializer(News.objects.filter(main=True)[:6], many=True)
         newsData = serializerNews.data
         from image_cropping.utils import get_backend
@@ -31,32 +26,6 @@ class BlockNewsViewSetAPI(views.APIView):
                 }
             )
             news['image'] = image
-        # for news in newsData.get("main"):
-        #     ID = news.get("id")
-        #     obj = News.objects.get(id = ID)
-        #     image = get_backend().get_thumbnail_url(
-        #         obj.imageOld,
-        #         {
-        #             'size': (900, 315),
-        #             'box': obj.imageBig,
-        #             'crop': True,
-        #             'detail': True,
-        #         }
-        #     )
-        #     news['image'] = image
-        # for news in newsData.get("important"):
-        #     ID = news.get("id")
-        #     obj = News.objects.get(id = ID)
-        #     image = get_backend().get_thumbnail_url(
-        #         obj.imageOld,
-        #         {
-        #             'size': (300, 300),
-        #             'box': obj.image,
-        #             'crop': True,
-        #             'detail': True,
-        #         }
-        #     )
-        #     news['image'] = image
         return Response(newsData)
 
 class AllNewsViewSet(views.APIView):

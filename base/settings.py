@@ -153,7 +153,7 @@ WSGI_APPLICATION = 'base.wsgi.application'
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 LITEDB = False
-LOCALDB = True
+LOCALDB = False
 if LITEDB == True:
     DATABASES = {
         'default': {
@@ -176,7 +176,7 @@ else:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql_psycopg2',
-            'NAME': 'test_diploma',
+            'NAME': 'dip_db',
             'USER': 'gr',
             'PASSWORD': 'grizot2301',
             'HOST': '127.0.0.1',

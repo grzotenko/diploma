@@ -8,8 +8,7 @@ from .validators import validate_file_extension, validate_image
 import architect
 from directions.models import Direction
 # Create your models here.
-@architect.install('partition', type='range', subtype='date',
-                   constraint='month', column='date')
+
 class News(models.Model):
     def user_directory_path(instance, filename):
         return '{0}/{1}/{2}'.format(instance._meta.app_label,instance.id, filename)
