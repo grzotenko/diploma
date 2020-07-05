@@ -5,7 +5,7 @@ from .validators import validate_file_extension, validate_image
 from django.utils.safestring import mark_safe       #for imagePreView
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
-
+import architect
 from directions.models import Direction
 # Create your models here.
 class Event(models.Model):
@@ -19,7 +19,7 @@ class Event(models.Model):
     address = models.CharField(default='', verbose_name="Место проведения", blank=True, max_length=300)
     map = models.CharField(blank=True, default="", max_length=1501, verbose_name="Ссылка на яндекс-карту")
     dateStart = models.DateField(default=timezone.now, blank=True, null=True, verbose_name="Дата начала")
-    dateEnd = models.DateField(blank=True,verbose_name="Дата окончания/проведения(ОСТАВЬТЕ ПУСТЫМ, ЕСЛИ У ВОЗМОЖНОСТИ НЕТ ПЕРИОДА ПРОВЕДЕНИЯ)",null=True)
+    dateEnd = models.DateField(blank=True,verbose_name="Дата окончания/проведения(ОСТАВЬТЕ ПУСТЫМ, ЕСЛИ У СОБЫТИЯ НЕТ ПЕРИОДА ПРОВЕДЕНИЯ)",null=True)
     date = models.CharField(max_length=100, verbose_name="Строковое представление даты", default="", blank=False)
     directions = models.ManyToManyField(Direction, verbose_name="Тэги",blank=True)
     main = models.BooleanField(default=False, verbose_name="Отображение на главной странице")

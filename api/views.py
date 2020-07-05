@@ -26,51 +26,49 @@ def time_test(request, format=None):
 def api_root(request, format=None):
 
     return Response({
-        'Main Page': {
-            'Footer & Header': reverse('common-fh-list', request=request),
-            'Block News': reverse('common-news-list', request=request),
-            'Block Media': reverse('common-media-list', request=request),
-            'Block Federation': reverse('common-federation-list', request=request),
-            'Block Events': reverse('common-events-list', request=request),
-            'Block Trends': reverse('common-trends-list', request=request),
-
-        },
-        'Events': {
-            'Active': {
-                'List': reverse('events-active-list', request=request, args=[0]),
-                'Filter-Direction': reverse('events-active-list', request=request, args=[0]) + "?direction=1",
-                'Filter-Time': reverse('events-active-list', request=request,
-                                       args=[0]) + "?from=10.4.2020&to=3.10.2020",
-            },
-            'Completed': {
-                'List': reverse('events-completed-list', request=request, args=[0]),
-                'Filter-Direction': reverse('events-completed-list', request=request, args=[0]) + "?direction=1",
-                'Filter-Time': reverse('events-completed-list', request=request,
-                                       args=[0]) + "?from=10.4.2020&to=3.10.2020",
-            },
-            'All': {
-                'List': reverse('events-all-list', request=request, args=[0]),
-                'Filter-Direction': reverse('events-all-list', request=request, args=[0]) + "?direction=1",
-                'Filter-Time': reverse('events-all-list', request=request,
-                                       args=[0]) + "?from=10.4.2020&to=3.10.2020",
-            },
-            'Detail': reverse('events-detail', request=request, args=[Event.objects.first().id]),
-        },
-        'News': {
-            'List': reverse('news-list', request=request, args=[0]),
-            'Filter-Direction': reverse('news-list', request=request, args=[0]) + "?direction=" + str(Direction.objects.first().id),
-            'Detail': reverse('news-detail', request=request, args=[1]),
-            'Filter-Time': reverse('news-list', request=request, args=[0]) + "?from=10.4.2020&to=03.05.2020",
-        },
-        'Federation': {
-            'Detail': reverse('federation-detail', request=request, args=[FederationElement.objects.first().id]),
-            'Page': reverse('federation-page', request=request),
-        },
+        # 'Main Page': {
+        #     'Footer & Header': reverse('common-fh-list', request=request),
+        #     'Block News': reverse('common-news-list', request=request),
+        #     'Block Media': reverse('common-media-list', request=request),
+        #     'Block Events': reverse('common-events-list', request=request),
+        #     'Block Trends': reverse('common-trends-list', request=request),
+        #
+        # },
+        # 'Events': {
+        #     'Active': {
+        #         'List': reverse('events-active-list', request=request, args=[0]),
+        #         'Filter-Direction': reverse('events-active-list', request=request, args=[0]) + "?direction=1",
+        #         'Filter-Time': reverse('events-active-list', request=request,
+        #                                args=[0]) + "?from=10.4.2020&to=3.10.2020",
+        #     },
+        #     'Completed': {
+        #         'List': reverse('events-completed-list', request=request, args=[0]),
+        #         'Filter-Direction': reverse('events-completed-list', request=request, args=[0]) + "?direction=1",
+        #         'Filter-Time': reverse('events-completed-list', request=request,
+        #                                args=[0]) + "?from=10.4.2020&to=3.10.2020",
+        #     },
+        #     'All': {
+        #         'List': reverse('events-all-list', request=request, args=[0]),
+        #         'Filter-Direction': reverse('events-all-list', request=request, args=[0]) + "?direction=1",
+        #         'Filter-Time': reverse('events-all-list', request=request,
+        #                                args=[0]) + "?from=10.4.2020&to=3.10.2020",
+        #     },
+        #     'Detail': reverse('events-detail', request=request, args=[Event.objects.first().id]),
+        # },
+        # 'News': {
+        #     'List': reverse('news-list', request=request, args=[0]),
+        #     'Filter-Direction': reverse('news-list', request=request, args=[0]) + "?direction=" + str(Direction.objects.first().id),
+        #     'Detail': reverse('news-detail', request=request, args=[1]),
+        #     'Filter-Time': reverse('news-list', request=request, args=[0]) + "?from=10.4.2020&to=03.05.2020",
+        # },
+        # 'Federation': {
+        #     'Page': reverse('federation-page', request=request),
+        # },
         'Search': reverse('search', request=request, args=[0]),
-        'Trends': {
-            'List': reverse('common-trends-list', request=request),
-            'Detail': reverse('trend-detail', request=request, args=[Trend.objects.first().id]),
-            'News': reverse('trend-detail-news', request=request, args=[Direction.objects.first().id, 0]),
-            'Opportunities': reverse('trend-detail-events', request=request, args=[Direction.objects.first().id, 0]),
-        },
+        # 'Trends': {
+        #     'List': reverse('common-trends-list', request=request),
+        #     'Detail': reverse('trend-detail', request=request, args=[Trend.objects.first().id]),
+        #     'News': reverse('trend-detail-news', request=request, args=[Direction.objects.first().id, 0]),
+        #     'Opportunities': reverse('trend-detail-events', request=request, args=[Direction.objects.first().id, 0]),
+        # },
     })

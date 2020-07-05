@@ -13,11 +13,10 @@ class MainPage(View):
     def get(self, request, *args, **kwargs):
         context = MainCommonViewSet.get(MainCommonViewSet, request, False)
 
-        print(context)
         return render(request, self.template_name, context)
 
 class MainPageReact(View):
     template_name = 'index.html'
-    def get(self, request):#, *args, **kwargs):
+    def get(self, *args, **kwargs):#, *args, **kwargs):
         context = dict()
-        return render(request, self.template_name, context)
+        return render(args[0], self.template_name, context)

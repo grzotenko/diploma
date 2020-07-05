@@ -24,8 +24,8 @@ class TrendDetailNews(views.APIView):
     def get(self, request, pk, page):
         id = int(pk)
         offset = int(page)
-        direction = get_object_or_404(Direction, id=id)
-        news = News.objects.filter(directions = direction)[offset:offset+6]
+        trend = get_object_or_404(Trend, id=id)
+        news = News.objects.filter(directions__id_fk = trend).distinct()[offset:offset+6]
         serializerDirectionNews = NewsPartBlockSerializer(news, many=True)
         dataDirectionNews = serializerDirectionNews.data
         from image_cropping.utils import get_backend
@@ -48,8 +48,8 @@ class TrendDetailEvents(views.APIView):
     def get(self, request, pk, page):
         id = int(pk)
         offset = int(page)
-        direction = get_object_or_404(Direction, id=id)
-        events = Event.objects.filter(directions = direction)[offset:offset+6]
+        trend = get_object_or_404(Trend, id=id)
+        events = Event.objects.filter(directions__id_fk = trend).distinct()[offset:offset+6]
         serializerDirectionEvents = EventBlockSerializer(events, many=True)
         dataDirectionEvents = serializerDirectionEvents.data
         from image_cropping.utils import get_backend

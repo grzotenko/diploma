@@ -43,11 +43,11 @@ class EventsAllViewSet(views.APIView):
                 setEvents = Event.objects.filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).reverse()
                 serializerEvents = EventBlockSerializer(setEvents[offset:offset+12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend)[offset:offset + 12], many=True)
+            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend).distinct()[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setEvents = Event.objects.filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend)
+            setEvents = Event.objects.filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend).distinct()
             serializerEvents = EventBlockSerializer(setEvents[offset:offset + 12], many=True)
         return Response(getDataEvents(serializerEvents))
 
@@ -66,11 +66,11 @@ class EventsActiveViewSet(views.APIView):
                 setEvents = Event.objects.filter(dateEnd__gte = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).reverse()
                 serializerEvents = EventBlockSerializer(setEvents[offset:offset+12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend, dateEnd__gte = date.today())[offset:offset + 12], many=True)
+            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend, dateEnd__gte = date.today()).distinct()[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setEvents = Event.objects.filter(dateEnd__gte = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend)
+            setEvents = Event.objects.filter(dateEnd__gte = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend).distinct()
             serializerEvents = EventBlockSerializer(setEvents[offset:offset + 12], many=True)
         return Response(getDataEvents(serializerEvents))
 
@@ -89,11 +89,11 @@ class EventsCompletedViewSet(views.APIView):
                 setEvents = Event.objects.filter(dateEnd__lt = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).reverse()
                 serializerEvents = EventBlockSerializer(setEvents[offset:offset+12], many=True)
         elif dateEndStr == "-" and dateStartStr == "-":
-            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend, dateEnd__lt = date.today())[offset:offset + 12], many=True)
+            serializerEvents = EventBlockSerializer(Event.objects.filter(directions__id_fk__id=trend, dateEnd__lt = date.today()).distinct()[offset:offset + 12], many=True)
         else:
             dateEnd = datetime.strptime(dateEndStr, '%d.%m.%Y')
             dateStart = datetime.strptime(dateStartStr, '%d.%m.%Y')
-            setEvents = Event.objects.filter(dateEnd__lt = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend)
+            setEvents = Event.objects.filter(dateEnd__lt = date.today()).filter(Q(dateEnd__range=(dateStart, dateEnd)) | Q(dateStart__range=(dateStart, dateEnd))).filter(directions__id_fk__id=trend).distinct()
             serializerEvents = EventBlockSerializer(setEvents[offset:offset + 12], many=True)
         return Response(getDataEvents(serializerEvents))
 

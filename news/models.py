@@ -5,7 +5,7 @@ from image_cropping import ImageRatioField
 from ckeditor.fields import RichTextField
 from ckeditor_uploader.fields import RichTextUploadingField
 from .validators import validate_file_extension, validate_image
-
+import architect
 from directions.models import Direction
 # Create your models here.
 class News(models.Model):
@@ -20,7 +20,7 @@ class News(models.Model):
     main = models.BooleanField(default=False, verbose_name="Главная новость")
     important = models.BooleanField(default=False, verbose_name="Важная новость")
     text = RichTextUploadingField(blank=True, default="", verbose_name="Текст")
-    directions = models.ManyToManyField(Direction, verbose_name="Выберите Направления", blank=True)
+    directions = models.ManyToManyField(Direction, verbose_name="Тэги", blank=True)
     def save(self, *args, **kwargs):
         if self.id:
             import os, glob
