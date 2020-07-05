@@ -24,7 +24,7 @@ SECRET_KEY = 'm3%i)edpr3a-zpnv3sx+80h*)%@lu-$u-doa9pix7f(aq9(jnh'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-REACT_USE = False
+REACT_USE = True
 
 ALLOWED_HOSTS = ['*',]
 

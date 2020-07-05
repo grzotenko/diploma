@@ -67,13 +67,17 @@ class CustomIndexDashboard(Dashboard):
             title=('События'),
             models=['events.models.*', ],
         ))
+        # self.children.append(modules.ModelList(
+        #     title=('Игроки и команды'),
+        #     models=['information.models.*', ],
+        # ))
+        # self.children.append(modules.ModelList(
+        #     title=('Соревнования'),
+        #     models=['tournaments.models.*', ],
+        # ))
         self.children.append(modules.ModelList(
-            title=('Игроки и команды'),
-            models=['information.models.*', ],
-        ))
-        self.children.append(modules.ModelList(
-            title=('Соревнования'),
-            models=['tournaments.models.*', ],
+            title=('TEST POSTGRE'),
+            models=['nextsearch.models.*', ],
         ))
 
 
